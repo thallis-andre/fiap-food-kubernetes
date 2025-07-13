@@ -6,7 +6,7 @@ resource "aws_eks_cluster" "fiap_food_eks" {
   name     = var.aws_cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
 
-  version = "1.30"
+  version = "1.32"
   upgrade_policy {
     support_type = "STANDARD"
   }
@@ -65,7 +65,7 @@ resource "aws_eks_node_group" "fiap_food_eks_node_group" {
 resource "aws_eks_addon" "kubeproxy" {
   cluster_name                = aws_eks_cluster.fiap_food_eks.name
   addon_name                  = "kube-proxy"
-  addon_version               = "v1.30.0-eksbuild.3"
+  addon_version               = "v1.32.0-eksbuild.2"
   resolve_conflicts_on_update = "PRESERVE"
   depends_on = [
     aws_eks_cluster.fiap_food_eks,
@@ -76,7 +76,19 @@ resource "aws_eks_addon" "kubeproxy" {
 resource "aws_eks_addon" "coredns" {
   cluster_name                = aws_eks_cluster.fiap_food_eks.name
   addon_name                  = "coredns"
-  addon_version               = "v1.11.1-eksbuild.8"
+  addon_version               = "v1.11.3-eksbuild.1"
+  resolve_conflicts_on_update = "PRESERVE"
+  depends_on = [
+    aws_eks_cluster.fiap_food_eks,
+    aws_eks_node_group.fiap_food_eks_node_group,
+  ]
+}
+
+# Adicionar VPC CNI addon (agora obrigatório)
+resource "aws_eks_addon" "vpc_cni" {
+  cluster_name                = aws_eks_cluster.fiap_food_eks.name
+  addon_name                  = "vpc-cni"
+  addon_version               = "v1.19.0-eksbuild.1"
   resolve_conflicts_on_update = "PRESERVE"
   depends_on = [
     aws_eks_cluster.fiap_food_eks,
