@@ -7,7 +7,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket = "fiap-food-soat10-f4"
+    bucket = "fiap-f4-soat10"
     key    = "global/s3/eks.tfstate"
     region = "us-east-1"
   }
