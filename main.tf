@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_eks_cluster" "fiap_food_eks" {
   name     = var.aws_cluster_name
-  role_arn = "arn:aws:iam::${var.aws_account_id}:role/LabRole"
+  role_arn = aws_iam_role.eks_cluster_role.arn
 
   version = "1.30"
   upgrade_policy {
@@ -36,7 +36,7 @@ resource "aws_eks_cluster" "fiap_food_eks" {
 resource "aws_eks_node_group" "fiap_food_eks_node_group" {
   cluster_name    = var.aws_cluster_name
   node_group_name = "${var.aws_cluster_name}-nodegroup"
-  node_role_arn   = "arn:aws:iam::${var.aws_account_id}:role/LabRole"
+  node_role_arn   = aws_iam_role.eks_node_group_role.arn
   instance_types  = ["t3.small"]
   disk_size       = 20
   ami_type        = "AL2023_x86_64_STANDARD"
